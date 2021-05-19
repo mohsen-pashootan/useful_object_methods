@@ -72,3 +72,70 @@ export function getHour(date) {
     : "";
   return hour;
 }
+
+/**
+ * gathering all media tags and unmute them except one tag
+ * @param  {Node} elem video or audio element node
+ * @return {Node} elem node that its muted became true and volume became 0
+ */
+export const muteMe = (elem) => {
+  elem.muted = true;
+  elem.volume = 0;
+};
+
+/**
+ * gathering all media tags and unmute them except one tag
+ * @param  {Node} elem video or audio element node
+ * @return {Node} elem node that its muted became false and volume became 1
+ */
+export const unMuteMe = (elem) => {
+  elem.muted = false;
+  elem.volume = 1;
+};
+
+// Try to mute all video and audio elements on the page
+export const mutePage = () => {
+  return document
+    .querySelectorAll("video, audio")
+    .forEach((elem) => muteMe(elem));
+};
+
+/**
+ * gathering all media tags and unmute them except one tag
+ * @param  {Node} exceptionNode Particulat media tag that must stay mute
+ * @param  {NodeList} nodes All video and audio tags in app
+ * @return {Node}   node that unmuted and volume turn to 1
+ */
+export const unMutePage = (exceptionNode) => {
+  const nodes = document.querySelectorAll("video, audio");
+  nodes.forEach((elem) => {
+    if (exceptionNode) {
+      if (elem !== exceptionNode) unMuteMe(elem);
+    } else {
+      unMuteMe(elem);
+    }
+  });
+};
+
+/**
+ * gathering all media tags and unmute them except one tag
+ * @param  {string} id of a video node
+ * @return {Node}  video elem node
+ */
+export const videoNode = (id) => {
+  return document.getElementById(`${id}`);
+};
+
+export const mediaElementIsPlaying = (el) => {
+  return (
+    el && el.currentTime > 0 && !el.paused && !el.ended && el.readyState > 2
+  );
+};
+
+export const videoIsPlaying = !![
+  ...document.getElementsByTagName("video"),
+].find((el) => mediaElementIsPlaying(el));
+
+export const audioIsPlaying = !![
+  ...document.getElementsByTagName("audio"),
+].find((el) => mediaElementIsPlaying(el));
